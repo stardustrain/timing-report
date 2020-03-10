@@ -14,7 +14,7 @@ const Aside = styled.aside`
   font-size: 2rem;
   text-align: center;
 
-  li:not(:first-child) {
+  li:not(:first-of-type) {
     margin-top: 4rem;
   }
 
