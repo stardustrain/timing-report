@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import Overview from './pages/overview/Overview'
-import Github from './pages/github/Github'
+import Github from './pages/github/GithubReportPage'
 
 import GlobalStyle from './styles/GlobalStyle'
 import styled from './styles/styled'
@@ -27,10 +27,10 @@ const Main = styled.main`
   min-height: 100vh;
   max-width: 1200px;
   width: 100%;
-`
 
-const Article = styled.article`
-  padding: 3rem 3rem;
+  & > div {
+    padding: 3rem 3rem;
+  }
 `
 
 function App() {
@@ -40,12 +40,10 @@ function App() {
       <Sidebar />
       <Header />
       <Main>
-        <Article>
-          <Switch>
-            <Route path="/" component={Overview} exact />
-            <Route path="/github" component={Github} exact />
-          </Switch>
-        </Article>
+        <Switch>
+          <Route path="/github" component={Overview} exact />
+          <Route path="/" component={Github} exact />
+        </Switch>
       </Main>
     </Div>
   )

@@ -2,18 +2,19 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { MemoryRouter as Router } from 'react-router-dom'
 import { ThemeProvider } from 'emotion-theming'
+import { RecoilRoot } from 'recoil'
 
 import App from './App'
-import { Provider, rootStore } from './store'
 import { theme } from './styles/styled'
+import 'antd/dist/antd.css'
 
 ReactDOM.render(
-  <Provider value={rootStore}>
+  <RecoilRoot>
     <ThemeProvider theme={theme}>
       <Router>
         <App />
       </Router>
     </ThemeProvider>
-  </Provider>,
+  </RecoilRoot>,
   document.getElementById('root')
 )

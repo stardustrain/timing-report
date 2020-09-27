@@ -1,3 +1,24 @@
+import FireStore from './FireStore'
+
+interface GetDataParams {
+  collection: string
+  readonly startAt: string
+  readonly endAt: string
+}
+
+export const getData = async ({ collection, startAt, endAt }: GetDataParams) => {
+  const db = FireStore.getInstance()
+  const data: firebase.firestore.DocumentData = []
+
+  const collectionRef = db.collection(collection)
+  const snapshot = await collectionRef.orderBy('date').startAt(startAt).endAt(endAt).get()
+
+  snapshot.forEach(doc => {
+    data.push(doc.data())
+  })
+  return data
+}
+
 interface RequestParams {
   url: string
   method: 'GET' | 'POST'
@@ -9,7 +30,7 @@ export const request = async <T>({ url, method = 'GET', body }: RequestParams): 
     method,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer 51f081dcb088d6666e76e29c5c72bfa41f3cb695',
+      Authorization: `Bearer ${process.env.REACT_APP_GITHUB_API_KEY}`,
     },
     body: JSON.stringify(body),
   })
@@ -19,33 +40,3 @@ export const request = async <T>({ url, method = 'GET', body }: RequestParams): 
 
   return response.json()
 }
-
-export const query = `
-query {
-  search(query: "author:stardustrain created:2020-02-24..2020-02-26", type: ISSUE, first:100) {
-    issueCount
-    nodes {
-      __typename
-      ... on PullRequest {
-        createdAt
-        closed
-        title
-        additions
-        deletions
-        state
-        author {
-          login
-        }
-        commits {
-          totalCount
-        }
-        repository {
-          name
-          owner {
-            login
-          }
-        }
-      }
-    }
-  }
-}`

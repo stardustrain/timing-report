@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react'
+import { useRecoilState } from 'recoil'
+import { find, propEq } from 'ramda'
 
 import useEventListener from './hooks/useEventListener'
+import { dateFilter, DateFilter } from './recoil/date'
 
 import Button from './Button'
 
@@ -56,33 +59,41 @@ const Li = styled.li<{ isSelected: boolean }>`
 
 const options = [
   {
-    id: 'day',
+    id: DateFilter.TODAY,
     title: 'Today',
   },
   {
-    id: 'week',
+    id: DateFilter.WEEK,
     title: 'This week',
   },
   {
-    id: 'month',
+    id: DateFilter.MONTH,
     title: 'Month',
   },
   {
-    id: 'year',
+    id: DateFilter.YEAR,
     title: 'Year',
   },
-]
+] as const
+
+const getSelectedFilterTitle = (dateFilterOption: DateFilter) =>
+  find(propEq('id', dateFilterOption), options)?.title ?? ''
 
 export default function Header() {
+  const [dateFilterOption, setDateFilter] = useRecoilState(dateFilter)
+  const [buttonTitle, setButtonTitle] = useState(getSelectedFilterTitle(dateFilterOption))
   const [isActivate, setIsActivate] = useState(false)
-  const [selectedFilter, setFilter] = useState('Today')
   const $divEl = useRef<HTMLDivElement>(null)
 
   const toggleMenu = () => setIsActivate(prev => !prev)
 
   const selectFilter = (e: React.MouseEvent<HTMLElement>) => {
-    const name = (e.target as HTMLLIElement).dataset.name!
-    setFilter(name)
+    const { id } = (e.target as HTMLLIElement).dataset
+    if (!id) {
+      return
+    }
+    setDateFilter(id as DateFilter)
+    setButtonTitle(getSelectedFilterTitle(id as DateFilter))
     setIsActivate(false)
   }
 
@@ -102,11 +113,11 @@ export default function Header() {
   return (
     <StyledHeader>
       <div ref={$divEl}>
-        <Button title={selectedFilter} onClick={toggleMenu} color="default" />
+        <Button title={buttonTitle} onClick={toggleMenu} color="default" />
         {isActivate && (
           <ul onClick={selectFilter}>
             {options.map(({ id, title }) => (
-              <Li key={id} data-id={id} data-name={title} isSelected={title === selectedFilter}>
+              <Li key={id} data-id={id} data-name={title} isSelected={title === buttonTitle}>
                 {title}
               </Li>
             ))}
