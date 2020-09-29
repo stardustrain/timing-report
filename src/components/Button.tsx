@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styled from './styles/styled'
+import styled from '../styles/styled'
 
 interface StyleProps {
   color: 'primary' | 'default' | 'secondary'

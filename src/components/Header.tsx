@@ -2,18 +2,22 @@ import React, { useState, useRef } from 'react'
 import { useRecoilState } from 'recoil'
 import { find, propEq } from 'ramda'
 
-import useEventListener from './hooks/useEventListener'
-import { dateFilter, DateFilter } from './recoil/date'
+import useEventListener from '../hooks/useEventListener'
+import { dateFilter, DateFilter } from '../recoil/date'
 
 import Button from './Button'
 
-import styled from './styles/styled'
+import styled, { bp } from '../styles/styled'
 
 const StyledHeader = styled.header`
-  padding: 1.2rem 0;
+  padding: 1.2rem 0 1.2rem 15rem;
   background-color: rgba(0, 0, 0, 0.12);
   width: 100%;
   border-bottom: 1px solid #bdbdbd;
+
+  ${bp.mq[bp.BreakPoint.MEDIUM]} {
+    padding-left: 0;
+  }
 
   div {
     position: relative;
