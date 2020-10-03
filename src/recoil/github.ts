@@ -1,7 +1,7 @@
 import { selectorFamily } from 'recoil'
-import { isNil, groupBy, flatten } from 'ramda'
+import { isNil, groupBy, flatten, toPairs, sum, head, last } from 'ramda'
 import dayjs from 'dayjs'
-import { schemePastel1 } from 'd3-scale-chromatic'
+import { schemePastel1 as colors } from 'd3-scale-chromatic'
 
 import { getData } from '../utils/api'
 
@@ -43,7 +43,6 @@ export const githubSelector = selectorFamily({
 export const commitDataSelector = selectorFamily({
   key: 'CommitData',
   get: (nodes: GithubReport[]) => () => {
-    const colors = schemePastel1
     const validData = flatten(
       nodes
         .filter(node => !isNil(node.data))
@@ -84,7 +83,6 @@ export const commitDataSelector = selectorFamily({
 export const contributionDataSelector = selectorFamily({
   key: 'ContributionData',
   get: (nodes: GithubReport[]) => () => {
-    const colors = schemePastel1
     const dates = nodes.map(node => dayjs(node.date).format('YY-MM-DD ddd'))
     const contributionDataByDate = nodes.map(node => {
       if (!node.data) {
@@ -132,6 +130,37 @@ export const contributionDataSelector = selectorFamily({
     return {
       xAxis: dates,
       datasets,
+    }
+  },
+})
+
+const getCommitsCount = (commitHistory: GithubData[]) => sum(commitHistory.map(history => history.commits))
+
+export const topOfContributionProjectSelector = selectorFamily({
+  key: 'TopOfContributionProject',
+  get: (nodes: GithubReport[]) => () => {
+    const commitsCountByRepository = new Map<string, number>()
+
+    nodes
+      .flatMap(node => (isNil(node.data) ? [] : toPairs(groupBy(githubData => githubData.repository.name, node.data))))
+      .forEach(([repositoryName, commitHistory]) => {
+        const commitsCount = getCommitsCount(commitHistory)
+        commitsCountByRepository.set(repositoryName, (commitsCountByRepository.get(repositoryName) ?? 0) + commitsCount)
+      })
+
+    const sortedCommitsCount = Array.from(commitsCountByRepository.entries()).sort(
+      ([, aCount], [, bCount]) => bCount - aCount
+    )
+    const data = sortedCommitsCount.map<number>(last)
+
+    return {
+      xAxis: sortedCommitsCount.map<string>(head),
+      datasets: [
+        {
+          data,
+          backgroundColor: data.map((_, index) => colors[index]),
+        },
+      ],
     }
   },
 })
