@@ -25,7 +25,7 @@ export default function GithubReportGraph() {
   const dateOptions = useRecoilValue(dateSelector)
   const githubData = useRecoilValue(githubSelector(dateOptions))
 
-  const isEmpty = githubData.length === 0
+  const isEmpty = githubData.filter(node => node.data).length === 0
 
   return isEmpty ? (
     <Empty />

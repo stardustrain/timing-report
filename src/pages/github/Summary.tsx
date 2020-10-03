@@ -1,12 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { useRecoilValue } from 'recoil'
-import { cond, any, equals, always, T, pipe, converge, concat, head, tail, toUpper, clone } from 'ramda'
-import Chart from 'chart.js'
+import { cond, any, equals, always, T, pipe, converge, concat, head, tail, toUpper } from 'ramda'
+import Chart from '../../components/Chart'
 
 import { dateSelector } from '../../recoil/date'
 import { getDateRange } from '../../utils/date'
 import { topOfContributionProjectSelector } from '../../recoil/github'
-import { initializeChart, updateChart } from '../../utils/chart'
 
 import styled, { bp } from '../../styles/styled'
 import type { GithubReport } from '../../recoil/github'
@@ -115,50 +114,31 @@ const getCommitsPerDay = cond<number, number>([
 const toUpperFirst = converge(concat, [pipe(head, toUpper), tail])
 
 export default function Summary({ data }: Props) {
-  const barChart = useRef<Chart | null>(null)
   const { startAt, endAt } = useRecoilValue(dateSelector)
   const topOfContribution = useRecoilValue(topOfContributionProjectSelector(data))
   const summary = getSummary(data)
 
   const commitsPerDay = getCommitsPerDay(summary.commits, getDateRange(startAt, endAt))
 
-  useEffect(() => {
-    if (barChart.current === null) {
-      barChart.current = initializeChart('contributionChart', 'horizontalBar', {
-        legend: {
+  const chartOptions = {
+    legend: {
+      display: false,
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+      xAxes: [
+        {
           display: false,
         },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              display: false,
-            },
-          ],
-        },
-      })
-    }
-
-    if (topOfContribution.datasets.length === 0) {
-      return
-    }
-
-    const clonedTopOfContributionData = clone(topOfContribution)
-
-    updateChart({
-      chart: barChart.current,
-      labels: clonedTopOfContributionData.xAxis,
-      data: clonedTopOfContributionData.datasets,
-      isUpdateLabels: true,
-    })
-    // eslint-disable-next-line
-  }, [topOfContribution])
+      ],
+    },
+  }
 
   return (
     <Section>
@@ -166,9 +146,11 @@ export default function Summary({ data }: Props) {
       <div>
         <ChartContainer>
           <div>Top of contribution</div>
-          <canvas
-            id="contributionChart"
-            style={{ display: topOfContribution.datasets.length === 0 ? 'none' : 'block' }}
+          <Chart
+            chartId="topOfContributionChart"
+            chartType="horizontalBar"
+            data={{ ...topOfContribution }}
+            chartOptions={chartOptions}
           />
           <ContributionText>
             {head(topOfContribution.xAxis)}
