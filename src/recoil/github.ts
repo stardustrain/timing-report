@@ -38,6 +38,18 @@ const pageInfoFragment = gql`
   }
 `
 
+const commitItemFragment = gql`
+  fragment commitItem on Commit {
+    authors(first: 10) {
+      nodes {
+        name
+      }
+    }
+    committedDate
+    message
+  }
+`
+
 const pullRequestFragment = gql`
   fragment pullRequest on PullRequest {
     createdAt
@@ -49,8 +61,13 @@ const pullRequestFragment = gql`
     author {
       login
     }
-    commits {
+    commits(first: 30) {
       totalCount
+      nodes {
+        commit {
+          ...commitItem
+        }
+      }
     }
     repository {
       name
@@ -89,6 +106,7 @@ const QUERY = gql`
   }
   ${pageInfoFragment}
   ${resultNodeFragment}
+  ${commitItemFragment}
   ${pullRequestFragment}
 `
 
@@ -169,8 +187,6 @@ export const commitDataSelector = selectorFamily({
         backgroundColor: colors[i],
       }
     })
-
-    console.log(datasets)
 
     return {
       xAxis: dates.map(date => dayjs(date).format('YY-MM-DD ddd')),
