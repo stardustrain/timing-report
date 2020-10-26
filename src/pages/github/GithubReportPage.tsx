@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { useRecoilValue } from 'recoil'
 import { Skeleton } from 'antd'
 
-import { dateSelector, dateFilter, DateFilter } from '../../recoil/date'
+import { dateRangeSelector, dateFilter, DateFilterType } from '../../recoil/date'
 
 import GithubReportGraph from './GithubReportGraph'
 
@@ -18,13 +18,15 @@ const P = styled.p`
 
 export default function GithubReportPage() {
   const selectedDateFilter = useRecoilValue(dateFilter)
-  const { startAt, endAt } = useRecoilValue(dateSelector)
+  const { startAt, endAt } = useRecoilValue(dateRangeSelector)
 
-  const isNotShowingDateRange = selectedDateFilter === DateFilter.TODAY
+  const isNotShowingDateRange = selectedDateFilter.filterType === DateFilterType.TODAY
 
   return (
     <div className="GithubReportPage">
-      <H1 isNotShowingDateRange={isNotShowingDateRange}>Github report for {selectedDateFilter.toLowerCase()}</H1>
+      <H1 isNotShowingDateRange={isNotShowingDateRange}>
+        Github report for {selectedDateFilter.filterType.toLowerCase()}
+      </H1>
       {isNotShowingDateRange ? null : (
         <P>
           {startAt} ~ {endAt}

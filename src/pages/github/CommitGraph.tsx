@@ -4,14 +4,9 @@ import { useRecoilValue } from 'recoil'
 import Chart from '../../components/Chart'
 
 import { commitDataSelector } from '../../recoil/github'
-import type { GithubReport } from '../../recoil/github'
 
-interface Props {
-  data: GithubReport[]
-}
-
-export default function CommitGraph({ data }: Props) {
-  const commitData = useRecoilValue(commitDataSelector(data))
+export default function CommitGraph() {
+  const commitData = useRecoilValue(commitDataSelector)
 
   const chartOptions = {
     scales: {

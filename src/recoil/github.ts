@@ -1,9 +1,10 @@
-import { selectorFamily } from 'recoil'
+import { selector } from 'recoil'
 import { isNil, groupBy, toPairs, sum, head, last } from 'ramda'
 import dayjs from 'dayjs'
 import { schemePastel1 as colors } from 'd3-scale-chromatic'
 import gql from 'graphql-tag'
 
+import { dateRangeSelector } from './date'
 import { graphqlRequest } from '../utils/api'
 
 import type { GithubReportQuery, ResultNodeFragment, PullRequestFragment } from '../generated/graphql'
@@ -115,9 +116,11 @@ type ResultNodePullRequestFragment = { __typename: 'PullRequest' } & PullRequest
 const isPullrequestNode = (node?: ResultNodeFragment | null): node is ResultNodePullRequestFragment =>
   !!(node?.__typename && node.__typename === 'PullRequest')
 
-export const githubSelector = selectorFamily({
+export const githubSelector = selector({
   key: 'GithubSelector',
-  get: ({ startAt, endAt }: { startAt: string; endAt: string }) => async () => {
+  get: async ({ get }) => {
+    const { startAt, endAt } = get(dateRangeSelector)
+
     const { search } = await graphqlRequest<GithubReportQuery>({
       query: QUERY,
       variables: {
@@ -158,9 +161,10 @@ export const githubSelector = selectorFamily({
   },
 })
 
-export const commitDataSelector = selectorFamily({
+export const commitDataSelector = selector({
   key: 'CommitData',
-  get: (nodes: GithubReport[]) => () => {
+  get: ({ get }) => {
+    const nodes = get(githubSelector)
     const flattendData = nodes.flatMap(node =>
       node.data
         ? node.data.map(githubData => ({
@@ -195,9 +199,10 @@ export const commitDataSelector = selectorFamily({
   },
 })
 
-export const contributionDataSelector = selectorFamily({
+export const contributionDataSelector = selector({
   key: 'ContributionData',
-  get: (nodes: GithubReport[]) => () => {
+  get: ({ get }) => {
+    const nodes = get(githubSelector)
     const dates = nodes.map(node => dayjs(node.date).format('YY-MM-DD ddd'))
     const contributionDataByDate = nodes.map(node => {
       if (!node.data) {
@@ -251,9 +256,10 @@ export const contributionDataSelector = selectorFamily({
 
 const getCommitsCount = (commitHistory: GithubData[]) => sum(commitHistory.map(history => history.commits))
 
-export const topOfContributionProjectSelector = selectorFamily({
+export const topOfContributionProjectSelector = selector({
   key: 'TopOfContributionProject',
-  get: (nodes: GithubReport[]) => () => {
+  get: ({ get }) => {
+    const nodes = get(githubSelector)
     const commitsCountByRepository = new Map<string, number>()
 
     nodes

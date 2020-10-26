@@ -3,36 +3,53 @@ import { cond, equals, always } from 'ramda'
 
 import { TODAY, GITHUB_QUERY_DATE_FORMAT, getWeekRange, getMonthRange } from '../utils/date'
 
-// export type DateFilter = 'TODAY' | 'WEEK' | 'MONTH' | 'YEAR'
-export enum DateFilter {
+export enum DateFilterType {
   TODAY = 'TODAY',
   WEEK = 'WEEK',
   MONTH = 'MONTH',
   YEAR = 'YEAR',
+  CUSTOM = 'CUSTOM',
 }
+
+type DateFilter =
+  | {
+      filterType: Exclude<DateFilterType, DateFilterType.CUSTOM>
+    }
+  | {
+      filterType: DateFilterType.CUSTOM
+      range: {
+        startAt: string
+        endAt: string
+      }
+    }
 
 export const dateFilter = atom<DateFilter>({
   key: 'dateFilter',
-  default: DateFilter.TODAY,
+  default: {
+    filterType: DateFilterType.TODAY,
+  },
 })
 
-export const dateSelector = selector({
-  key: 'dateSelector',
+export const dateRangeSelector = selector({
+  key: 'dateRangeSelector',
   get: ({ get }) => {
     const filterOption = get(dateFilter)
 
-    const res: { startAt: string; endAt: string } = cond([
+    if (filterOption.filterType === DateFilterType.CUSTOM) {
+      return filterOption.range
+    }
+
+    const res = cond<any, any>([
       [
-        equals(DateFilter.TODAY),
+        equals(DateFilterType.TODAY),
         always({
           startAt: TODAY.format(GITHUB_QUERY_DATE_FORMAT),
           endAt: TODAY.format(GITHUB_QUERY_DATE_FORMAT),
         }),
       ],
-      [equals('WEEK'), () => getWeekRange()],
-      [equals('MONTH'), () => getMonthRange()],
-      [equals('YEAR'), () => {}],
-    ])(filterOption)
+      [equals(DateFilterType.WEEK), () => getWeekRange()],
+      [equals(DateFilterType.MONTH), () => getMonthRange()],
+    ])(filterOption.filterType)
 
     return res
   },

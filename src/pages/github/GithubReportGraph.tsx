@@ -3,7 +3,6 @@ import { useRecoilValue } from 'recoil'
 import { Empty } from 'antd'
 
 import { githubSelector } from '../../recoil/github'
-import { dateSelector } from '../../recoil/date'
 
 import Summary from './Summary'
 import CommitGraph from './CommitGraph'
@@ -22,8 +21,7 @@ const Div = styled.div`
 `
 
 export default function GithubReportGraph() {
-  const dateOptions = useRecoilValue(dateSelector)
-  const githubData = useRecoilValue(githubSelector(dateOptions))
+  const githubData = useRecoilValue(githubSelector)
 
   const isEmpty = githubData.filter(node => node.data).length === 0
 
@@ -34,11 +32,11 @@ export default function GithubReportGraph() {
       <Summary data={githubData} />
       <section>
         <h2>Commit</h2>
-        <CommitGraph data={githubData} />
+        <CommitGraph />
       </section>
       <section>
         <h2>Contribution</h2>
-        <ContributionGrarph data={githubData} />
+        <ContributionGrarph />
       </section>
     </Div>
   )

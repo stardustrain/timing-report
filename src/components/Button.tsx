@@ -2,14 +2,18 @@ import React from 'react'
 
 import styled from '../styles/styled'
 
+import type { MouseEvent } from 'react'
+
 interface StyleProps {
   color: 'primary' | 'default' | 'secondary'
   disabled?: boolean
 }
 
 interface Props extends StyleProps {
+  className?: string
   title: string
-  onClick: () => void
+  type?: 'button' | 'submit' | 'reset'
+  onClick: (e: MouseEvent) => void
 }
 
 const themeMap = {
@@ -19,7 +23,7 @@ const themeMap = {
   disabled: 'rgba(255, 255, 255, 0.3)',
 }
 
-const StyledButton = styled('button')<StyleProps>`
+const StyledButton = styled.button<StyleProps>`
   position: relative;
   background-color: ${props => themeMap[props.color]};
   padding: 0.6rem 1.6rem;
@@ -54,9 +58,9 @@ const StyledButton = styled('button')<StyleProps>`
   }
 `
 
-export default function Button({ title, color, onClick, disabled }: Props) {
+export default function Button({ type = 'button', title, color, className, onClick, disabled }: Props) {
   return (
-    <StyledButton color={color} onClick={onClick} disabled={disabled}>
+    <StyledButton className={className} type={type} color={color} onClick={onClick} disabled={disabled}>
       <span></span>
       {title}
     </StyledButton>

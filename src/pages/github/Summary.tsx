@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil'
 import { cond, any, equals, always, T, pipe, converge, concat, head, tail, toUpper } from 'ramda'
 import Chart from '../../components/Chart'
 
-import { dateSelector } from '../../recoil/date'
+import { dateRangeSelector } from '../../recoil/date'
 import { getDateRange } from '../../utils/date'
 import { topOfContributionProjectSelector } from '../../recoil/github'
 
@@ -114,8 +114,8 @@ const getCommitsPerDay = cond<number, number>([
 const toUpperFirst = converge(concat, [pipe(head, toUpper), tail])
 
 export default function Summary({ data }: Props) {
-  const { startAt, endAt } = useRecoilValue(dateSelector)
-  const topOfContribution = useRecoilValue(topOfContributionProjectSelector(data))
+  const { startAt, endAt } = useRecoilValue(dateRangeSelector)
+  const topOfContribution = useRecoilValue(topOfContributionProjectSelector)
   const summary = getSummary(data)
 
   const commitsPerDay = getCommitsPerDay(summary.commits, getDateRange(startAt, endAt))

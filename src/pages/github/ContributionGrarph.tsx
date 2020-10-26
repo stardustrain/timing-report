@@ -4,14 +4,9 @@ import { useRecoilValue } from 'recoil'
 import Chart from '../../components/Chart'
 
 import { contributionDataSelector } from '../../recoil/github'
-import type { GithubReport } from '../../recoil/github'
 
-interface Props {
-  data: GithubReport[]
-}
-
-export default function ContributionGrarph({ data }: Props) {
-  const contributionData = useRecoilValue(contributionDataSelector(data))
+export default function ContributionGrarph() {
+  const contributionData = useRecoilValue(contributionDataSelector)
 
   const chartOptions = {
     scales: {
