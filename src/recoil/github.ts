@@ -12,7 +12,7 @@ import type { GithubReportQuery } from '../generated/graphql'
 import type { InnerRecoilDataType, Oneof, Property } from '../utils/typeHelper'
 
 export type NormalizedGithubData = Oneof<InnerRecoilDataType<typeof githubSelector>>
-export type GithubData = Property<Oneof<NormalizedGithubData>, 'data'>
+export type GithubData = Property<NormalizedGithubData, 'data'>
 
 const pageInfoFragment = gql`
   fragment pageInfo on PageInfo {
@@ -101,8 +101,6 @@ export const githubSelector = selector({
         query: getSearchQuery(startAt, endAt),
       },
     })
-
-    console.log(normalize(search, startAt, endAt))
 
     return normalize(search, startAt, endAt)
   },
