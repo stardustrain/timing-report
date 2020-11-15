@@ -37,7 +37,7 @@ const options = [
 ] as const
 
 interface Props {
-  onSelect: (id: DateFilterType) => void
+  onSelect: () => void
 }
 
 export default function QuickDateFilter({ onSelect }: Props) {
@@ -50,7 +50,7 @@ export default function QuickDateFilter({ onSelect }: Props) {
     setDateFilter({
       filterType: id,
     })
-    onSelect(id)
+    onSelect()
   }
 
   return (

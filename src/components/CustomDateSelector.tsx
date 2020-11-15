@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Dispatch, SetStateAction } from 'react'
 import { useRecoilState } from 'recoil'
 
 import { dateFilter, DateFilterType } from '../recoil/date'
@@ -62,9 +62,10 @@ const Separator = styled.div`
 
 interface Props {
   dateRange: string
+  onSetActivePanel: Dispatch<SetStateAction<boolean>>
 }
 
-export default function CustomDateSelector({ dateRange }: Props) {
+export default function CustomDateSelector({ dateRange, onSetActivePanel }: Props) {
   const [, setDateRange] = useRecoilState(dateFilter)
   const [startAt, setStartAt] = useState<string | null>(null)
   const [endAt, setEndAt] = useState<string | null>(null)
@@ -106,6 +107,7 @@ export default function CustomDateSelector({ dateRange }: Props) {
                   endAt,
                 },
               })
+              onSetActivePanel(false)
             }
           }}
           color="primary"

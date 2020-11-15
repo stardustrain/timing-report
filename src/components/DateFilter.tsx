@@ -96,14 +96,13 @@ const getSelectedFilterTitle = (dateFilterOption: DateFilterType) =>
 export default function DateFilter() {
   const [dateFilterOption] = useRecoilState(dateFilter)
   const { startAt, endAt } = useRecoilValue(dateRangeSelector)
-  const [buttonTitle, setButtonTitle] = useState(getSelectedFilterTitle(dateFilterOption.filterType))
-  const [isActivate, setIsActivate] = useState(true)
+  const [isActivate, setIsActivate] = useState(false)
+  const [isActivateCustomSelector, setIsActivateCustomSelector] = useState(false)
   const $divEl = useRef<HTMLDivElement>(null)
 
   const toggleMenu = () => setIsActivate(prev => !prev)
 
-  const onSelect = (id: DateFilterType) => {
-    setButtonTitle(getSelectedFilterTitle(id))
+  const onSelect = () => {
     setIsActivate(false)
   }
 
@@ -122,16 +121,25 @@ export default function DateFilter() {
 
   return (
     <Div ref={$divEl}>
-      <Button title={buttonTitle} onClick={toggleMenu} color="default" />
+      <Button title={getSelectedFilterTitle(dateFilterOption.filterType)} onClick={toggleMenu} color="default" />
       {isActivate && (
         <FilterOptionPanel>
           <ul>
             <QuickDateFilter onSelect={onSelect} />
-            <Li>Set custom </Li>
+            <Li
+              onClick={() => {
+                setIsActivateCustomSelector(prev => !prev)
+              }}
+            >
+              Set custom{' '}
+            </Li>
           </ul>
-          <CustomDateSelector
-            dateRange={dateFilterOption.filterType === DateFilterType.TODAY ? startAt : `${startAt} ~ ${endAt}`}
-          />
+          {isActivateCustomSelector && (
+            <CustomDateSelector
+              dateRange={dateFilterOption.filterType === DateFilterType.TODAY ? startAt : `${startAt} ~ ${endAt}`}
+              onSetActivePanel={setIsActivate}
+            />
+          )}
         </FilterOptionPanel>
       )}
     </Div>
