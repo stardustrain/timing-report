@@ -8,7 +8,7 @@ import { getDateRange } from '../../utils/date'
 import { topOfContributionProjectSelector } from '../../recoil/github'
 
 import styled, { bp } from '../../styles/styled'
-import type { GithubReport } from '../../recoil/github'
+import type { NormalizedGithubData } from '../../recoil/github'
 
 const Section = styled.section`
   & > div {
@@ -84,18 +84,15 @@ const ContributionText = styled.div`
   }
 `
 
-interface Props {
-  data: GithubReport[]
-}
-
-const getSummary = (reports: GithubReport[]) =>
+const getSummary = (reports: NormalizedGithubData[]) =>
   reports
     .flatMap(report => report.data ?? [])
     .reduce(
       (acc, data) => {
-        ['additions', 'deletions', 'commits'].forEach(key => {
+        ;['additions', 'deletions'].forEach(key => {
           acc[key] += data[key]
         })
+        acc.commits += data.commits?.length ?? 0
 
         return acc
       },
@@ -112,6 +109,10 @@ const getCommitsPerDay = cond<number, number>([
 ])
 
 const toUpperFirst = converge(concat, [pipe(head, toUpper), tail])
+
+interface Props {
+  data: NormalizedGithubData[]
+}
 
 export default function Summary({ data }: Props) {
   const { startAt, endAt } = useRecoilValue(dateRangeSelector)

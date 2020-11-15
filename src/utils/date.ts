@@ -7,6 +7,8 @@ dayjs.extend(weekDay)
 
 export const GITHUB_QUERY_DATE_FORMAT = 'YYYY-MM-DD'
 
+export const githubDateFormat = (date: string | Date | dayjs.Dayjs) => dayjs(date).format(GITHUB_QUERY_DATE_FORMAT)
+
 export const getUtc = (date?: string | number | Date) => dayjs(date).utc()
 export const TODAY = getUtc()
 

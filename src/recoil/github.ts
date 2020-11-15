@@ -5,32 +5,14 @@ import { schemePastel1 as colors } from 'd3-scale-chromatic'
 import gql from 'graphql-tag'
 
 import { dateRangeSelector } from './date'
+import { normalize } from './githubHelpers'
 import { graphqlRequest } from '../utils/api'
 
-import type { GithubReportQuery, ResultNodeFragment, PullRequestFragment } from '../generated/graphql'
+import type { GithubReportQuery } from '../generated/graphql'
+import type { InnerRecoilDataType, Oneof, Property } from '../utils/typeHelper'
 
-type Repository = {
-  name: string
-  owner: string
-}
-
-export type GithubData = {
-  date: string
-  additions: number
-  author: string
-  closed: boolean
-  commits: number
-  createdAt: string
-  deletions: number
-  repository: Repository
-  state: string
-  title: string
-}
-
-export type GithubReport = {
-  date: string
-  data: GithubData[] | null
-}
+export type NormalizedGithubData = Oneof<InnerRecoilDataType<typeof githubSelector>>
+export type GithubData = Property<Oneof<NormalizedGithubData>, 'data'>
 
 const pageInfoFragment = gql`
   fragment pageInfo on PageInfo {
@@ -41,10 +23,8 @@ const pageInfoFragment = gql`
 
 const commitItemFragment = gql`
   fragment commitItem on Commit {
-    authors(first: 10) {
-      nodes {
-        name
-      }
+    author {
+      email
     }
     committedDate
     message
@@ -63,7 +43,6 @@ const pullRequestFragment = gql`
       login
     }
     commits(first: 30) {
-      totalCount
       nodes {
         commit {
           ...commitItem
@@ -111,11 +90,6 @@ const QUERY = gql`
   ${pullRequestFragment}
 `
 
-type ResultNodePullRequestFragment = { __typename: 'PullRequest' } & PullRequestFragment
-
-const isPullrequestNode = (node?: ResultNodeFragment | null): node is ResultNodePullRequestFragment =>
-  !!(node?.__typename && node.__typename === 'PullRequest')
-
 export const githubSelector = selector({
   key: 'GithubSelector',
   get: async ({ get }) => {
@@ -128,36 +102,9 @@ export const githubSelector = selector({
       },
     })
 
-    if (isNil(search?.edges)) {
-      return []
-    }
+    console.log(normalize(search, startAt, endAt))
 
-    const dateRange = dayjs(endAt).diff(startAt, 'd') + 1
-    const dates = new Array(dateRange).fill(null).map((_, index) => dayjs(startAt).add(index, 'd').format('YYYY-MM-DD'))
-
-    const pullRequests = search.edges.flatMap(edge => (isPullrequestNode(edge?.node) && edge?.node ? [edge.node] : []))
-    const groupByDate = groupBy(node => dayjs(node.createdAt).format('YYYY-MM-DD'), pullRequests)
-
-    return dates.map(date => ({
-      date,
-      data: isNil(groupByDate[date])
-        ? null
-        : groupByDate[date].map(pullRequest => ({
-            date: dayjs(pullRequest.createdAt).format('YYYY-MM-DD'),
-            additions: pullRequest.additions,
-            author: pullRequest.author?.login ?? '',
-            closed: pullRequest.closed,
-            commits: pullRequest.commits.totalCount,
-            createdAt: dayjs(pullRequest.createdAt).format('YYYY-MM-DD'),
-            deletions: pullRequest.deletions,
-            repository: {
-              name: pullRequest.repository.name,
-              owner: pullRequest.repository.owner.login,
-            },
-            state: pullRequest.state,
-            title: pullRequest.title,
-          })),
-    }))
+    return normalize(search, startAt, endAt)
   },
 })
 
@@ -165,7 +112,7 @@ export const commitDataSelector = selector({
   key: 'CommitData',
   get: ({ get }) => {
     const nodes = get(githubSelector)
-    const flattendData = nodes.flatMap(node =>
+    const pullRequests = nodes.flatMap(node =>
       node.data
         ? node.data.map(githubData => ({
             ...githubData,
@@ -173,20 +120,21 @@ export const commitDataSelector = selector({
         : []
     )
 
-    const groupByRepository = groupBy(data => data.repository.name, flattendData)
+    const groupByRepository = groupBy(pullRequest => pullRequest.repository.name, pullRequests)
 
     const dates = nodes.map(node => node.date)
 
-    const datasets = Object.keys(groupByRepository).map((key, i) => {
+    const datasets = Object.keys(groupByRepository).map((repositoryName, i) => {
       const data = new Array(dates.length).fill(0)
-
-      groupByRepository[key].forEach(pr => {
-        const index = dates.findIndex(date => date === pr.date)
-        data[index] = data[index] + pr.commits
+      groupByRepository[repositoryName].forEach(pr => {
+        pr.commits?.forEach(node => {
+          const index = dates.findIndex(date => date === dayjs(node?.commit.committedDate).format('YYYY-MM-DD'))
+          data[index] = data[index] + 1
+        })
       })
 
       return {
-        label: key,
+        label: repositoryName,
         data,
         backgroundColor: colors[i],
       }
@@ -254,8 +202,6 @@ export const contributionDataSelector = selector({
   },
 })
 
-const getCommitsCount = (commitHistory: GithubData[]) => sum(commitHistory.map(history => history.commits))
-
 export const topOfContributionProjectSelector = selector({
   key: 'TopOfContributionProject',
   get: ({ get }) => {
@@ -265,7 +211,7 @@ export const topOfContributionProjectSelector = selector({
     nodes
       .flatMap(node => (isNil(node.data) ? [] : toPairs(groupBy(githubData => githubData.repository.name, node.data))))
       .forEach(([repositoryName, commitHistory]) => {
-        const commitsCount = getCommitsCount(commitHistory)
+        const commitsCount = sum(commitHistory.map(history => history.commits?.length ?? 0))
         commitsCountByRepository.set(repositoryName, (commitsCountByRepository.get(repositoryName) ?? 0) + commitsCount)
       })
 

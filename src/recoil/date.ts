@@ -30,7 +30,7 @@ export const dateFilter = atom<DateFilter>({
   },
 })
 
-export const dateRangeSelector = selector({
+export const dateRangeSelector = selector<{ startAt: string; endAt: string }>({
   key: 'dateRangeSelector',
   get: ({ get }) => {
     const filterOption = get(dateFilter)

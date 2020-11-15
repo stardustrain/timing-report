@@ -1,0 +1,387 @@
+{
+  "data": {
+    "search": {
+      "pageInfo": {
+        "hasNextPage": false,
+        "endCursor": "Y3Vyc29yOjk="
+      },
+      "issueCount": 9,
+      "edges": [
+        {
+          "cursor": "Y3Vyc29yOjE=",
+          "node": {
+            "__typename": "Issue"
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjI=",
+          "node": {
+            "__typename": "PullRequest",
+            "createdAt": "2020-09-29T08:14:49Z",
+            "closed": true,
+            "title": "resolve #8 Add responsive at sidebar",
+            "additions": 224,
+            "deletions": 73,
+            "state": "MERGED",
+            "author": {
+              "login": "stardustrain"
+            },
+            "commits": {
+              "totalCount": 2,
+              "nodes": [
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-27T13:56:54Z",
+                    "message": "Add breakpoints"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-29T08:13:57Z",
+                    "message": "resolve #8 Add responsive style to Sidebar"
+                  }
+                }
+              ]
+            },
+            "repository": {
+              "name": "timing-report",
+              "owner": {
+                "login": "stardustrain"
+              }
+            }
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjM=",
+          "node": {
+            "__typename": "Issue"
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjQ=",
+          "node": {
+            "__typename": "PullRequest",
+            "createdAt": "2020-09-27T12:29:30Z",
+            "closed": true,
+            "title": "resolve #4 Add GitHub report page",
+            "additions": 7314,
+            "deletions": 3337,
+            "state": "MERGED",
+            "author": {
+              "login": "stardustrain"
+            },
+            "commits": {
+              "totalCount": 4,
+              "nodes": [
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-03-16T02:16:25Z",
+                    "message": "[WIP] Add github report page"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-07-19T05:11:25Z",
+                    "message": "Fix broken codes"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-07-29T01:25:01Z",
+                    "message": "[WIP] Add github report page - commit, contribution graph"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-27T12:27:15Z",
+                    "message": "resolve #4 Add contribution, commit graph"
+                  }
+                }
+              ]
+            },
+            "repository": {
+              "name": "timing-report",
+              "owner": {
+                "login": "stardustrain"
+              }
+            }
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjU=",
+          "node": {
+            "__typename": "PullRequest",
+            "createdAt": "2020-09-25T04:35:43Z",
+            "closed": true,
+            "title": "FE-658 Fix notification logic",
+            "additions": 8,
+            "deletions": 3,
+            "state": "MERGED",
+            "author": {
+              "login": "stardustrain"
+            },
+            "commits": {
+              "totalCount": 1,
+              "nodes": [
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-25T03:53:35Z",
+                    "message": "FE-658 Fix notification logic"
+                  }
+                }
+              ]
+            },
+            "repository": {
+              "name": "waluigi.js",
+              "owner": {
+                "login": "odkmedia"
+              }
+            }
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjY=",
+          "node": {
+            "__typename": "PullRequest",
+            "createdAt": "2020-09-24T14:46:21Z",
+            "closed": true,
+            "title": "GQ-135 Add unit test setting",
+            "additions": 3330,
+            "deletions": 53,
+            "state": "MERGED",
+            "author": {
+              "login": "stardustrain"
+            },
+            "commits": {
+              "totalCount": 5,
+              "nodes": [
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-24T14:40:02Z",
+                    "message": "GQ-135 Add jest settings"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-24T14:40:46Z",
+                    "message": "GQ-135 Add test case for rest middleware and misc.ts"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-25T06:15:49Z",
+                    "message": "GQ-135 Fix ip check logic"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-25T06:21:45Z",
+                    "message": "GQ-135 Fix to split unit testing"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-25T06:28:44Z",
+                    "message": "GQ-135 Fix getPageNumber"
+                  }
+                }
+              ]
+            },
+            "repository": {
+              "name": "odc-frontend-graphql",
+              "owner": {
+                "login": "odkmedia"
+              }
+            }
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjc=",
+          "node": {
+            "__typename": "PullRequest",
+            "createdAt": "2020-09-22T09:17:50Z",
+            "closed": true,
+            "title": "GQ-69 Add curation cache",
+            "additions": 62,
+            "deletions": 19,
+            "state": "MERGED",
+            "author": {
+              "login": "stardustrain"
+            },
+            "commits": {
+              "totalCount": 3,
+              "nodes": [
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-22T09:19:20Z",
+                    "message": "GQ-69 Add curation cache"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-22T09:19:20Z",
+                    "message": "GQ-69 Remove dataloader"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-23T03:10:20Z",
+                    "message": "GQ-69 Fix SafeRedisCache to set cache without default expiration time"
+                  }
+                }
+              ]
+            },
+            "repository": {
+              "name": "odc-frontend-graphql",
+              "owner": {
+                "login": "odkmedia"
+              }
+            }
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjg=",
+          "node": {
+            "__typename": "PullRequest",
+            "createdAt": "2020-09-22T07:40:18Z",
+            "closed": true,
+            "title": "Fix release version",
+            "additions": 1,
+            "deletions": 1,
+            "state": "MERGED",
+            "author": {
+              "login": "stardustrain"
+            },
+            "commits": {
+              "totalCount": 1,
+              "nodes": [
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-22T07:38:19Z",
+                    "message": "Fix release version"
+                  }
+                }
+              ]
+            },
+            "repository": {
+              "name": "odc-frontend",
+              "owner": {
+                "login": "odkmedia"
+              }
+            }
+          }
+        },
+        {
+          "cursor": "Y3Vyc29yOjk=",
+          "node": {
+            "__typename": "PullRequest",
+            "createdAt": "2020-09-21T11:29:35Z",
+            "closed": true,
+            "title": "GQ-141 Add cors setting for *.odkmedia.dev",
+            "additions": 4,
+            "deletions": 0,
+            "state": "MERGED",
+            "author": {
+              "login": "stardustrain"
+            },
+            "commits": {
+              "totalCount": 2,
+              "nodes": [
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-21T11:28:11Z",
+                    "message": "GQ-141 Add cors setting for *.odkmedia.dev"
+                  }
+                },
+                {
+                  "commit": {
+                    "author": {
+                      "name": "stardustrain",
+                      "email": "kthanterran@gmail.com"
+                    },
+                    "committedDate": "2020-09-22T07:23:23Z",
+                    "message": "GQ-141 Fix regex pattern"
+                  }
+                }
+              ]
+            },
+            "repository": {
+              "name": "odc-frontend-graphql",
+              "owner": {
+                "login": "odkmedia"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
